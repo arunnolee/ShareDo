@@ -12,6 +12,10 @@ class UserModel(AbstractUser):
     REQUIRED_FIELDS = ['email', 'password']
 
 class DriverModel(models.Model):
+
+    class RideType(models.Choices):
+        
+        pass
     drivername = models.ForeignKey(UserModel,  on_delete=models.CASCADE, related_name='driver_profile')
     location = models.CharField(max_length=20)
     destination = models.CharField(max_length=20)
