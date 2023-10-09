@@ -16,7 +16,7 @@ class DriverModel(models.Model):
     class RideType(models.Choices):
         
         pass
-    drivername = models.ForeignKey(UserModel,  on_delete=models.CASCADE, related_name='driver_profile')
+    drivername = models.OneToOneField(UserModel,  on_delete=models.CASCADE, related_name='driver_profile')
     location = models.CharField(max_length=20)
     destination = models.CharField(max_length=20)
     date = models.DateField()
@@ -28,7 +28,7 @@ class DriverModel(models.Model):
         return self.drivername.username
     
 class Verification(models.Model):
-    user = models.ForeignKey(UserModel, on_delete=models.CASCADE)
+    user = models.OneToOneField(UserModel, on_delete=models.CASCADE, related_name='verification')
     legal_name = models.CharField(max_length=50)
     citizenship_photo = models.ImageField(upload_to='documents/')
     phone_number = models.CharField(max_length=15)

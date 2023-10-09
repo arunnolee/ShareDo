@@ -4,6 +4,7 @@ from django.contrib.auth.hashers import make_password
 from .models  import UserModel, DriverModel, Verification
 from .form import DriverForm, VerificationForm
 from django.contrib.auth.decorators  import login_required
+from .decorators import isVerifiedClient
 
 def home(request):
     return render(request, 'index.html')
@@ -86,9 +87,9 @@ def driver(request):
 def driverdoc(request):
     return render(request, 'driverdoc.html')
 
-@login_required
+# @isVerifiedClient
 def table(request):
-    if request.user.groups.filter(name='users').exists():
+    if request.user.verification.is_verified == True:
         records = DriverModel.objects.all()
         context = {'records': records}
         return render(request, 'table.html', context)
