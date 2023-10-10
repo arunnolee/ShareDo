@@ -47,7 +47,7 @@ def signup(request):
         
         UserModel.objects.create(username=username, email=email, password=make_password(password), confirm_password=make_password(confirm_password))
         return redirect('login')
-        return HttpResponse('Account Created Successfully')
+        # return HttpResponse('Account Created Successfully')
 
     return render(request, 'signup.html')
 
