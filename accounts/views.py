@@ -1,5 +1,5 @@
 from django.shortcuts import render, HttpResponse, redirect
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password
 from .models  import UserModel, DriverModel, Verification
 from .form import DriverForm, VerificationForm
@@ -13,6 +13,10 @@ def home(request):
 def dashboard(request):
     return render(request, 'dashboard.html')
 
+
+def logout(request):
+    logout(request)
+    return redirect('login')
 
 def logins(request):
     if request.method == "POST":
@@ -90,17 +94,24 @@ def client(request):
 def driverdoc(request):
     return render(request, 'driverdoc.html')
 
-
-@login_required
+# @isVerifiedClient
 def table(request):
-    # if request.user.groups.filter(name='users').exists():
-        records = DriverModel.objects.all()
+    records = DriverModel.objects.all()
+    if request.user.verification.is_verified == True:
+
         if request.method == 'POST':
-            rec = request.POST.get('location','destination')
+            rec = request.POST.get('location', 'destination')
             if rec!= None:
                 records = DriverModel.objects.filter(Q(location=rec) | Q(destination=rec))
-        context = {'records': records}
-        return render(request, 'table.html', context)
-    # else:
-    #     return redirect('verification')
+
+    context = {'records': records}
+    return render(request, 'table.html', context)
+
+
+def verified_or_not(request):
+    if request.user.verification.is_verified == True:
+        return redirect('journeytable')
+    else:
+        return redirect('verification')
     
+        
