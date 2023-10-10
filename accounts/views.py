@@ -94,24 +94,28 @@ def client(request):
 def driverdoc(request):
     return render(request, 'driverdoc.html')
 
-# @isVerifiedClient
+
 def table(request):
+    
     records = DriverModel.objects.all()
-    if request.user.verification.is_verified == True:
-
-        if request.method == 'POST':
-            rec = request.POST.get('location', 'destination')
-            if rec!= None:
-                records = DriverModel.objects.filter(Q(location=rec) | Q(destination=rec))
-
-    context = {'records': records}
-    return render(request, 'table.html', context)
-
-
-def verified_or_not(request):
-    if request.user.verification.is_verified == True:
-        return redirect('journeytable')
-    else:
+    try:
+        if request.user.verification.is_verified == True:
+            if request.method == 'POST':
+                search = request.POST.get('search')
+                if search != None:
+                    records = DriverModel.objects.filter(Q(location__contains=search) | Q(destination__contains=search)) 
+        else:
+            return HttpResponse("You are not verified yet!!!")
+        context = {'records': records}
+        return render(request, 'table.html', context)
+    except:
         return redirect('verification')
+
+
+# def verified_or_not(request):
+#     if request.user.verification.is_verified == True:
+#         return redirect('journeytable')
+#     else:
+#         return redirect('verification')
     
         

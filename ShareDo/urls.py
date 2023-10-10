@@ -31,5 +31,5 @@ urlpatterns = [
     path('driverdocumentupload/', views.driverdoc, name= 'driverdoc'),
     path('journeytable/', views.table, name= 'journeytable'),
     path('clientform/', views.client, name= 'client '),
-    path('v/', views.verified_or_not, name="vo")
+    # path('v/', views.verified_or_not, name="vo")
 ]
