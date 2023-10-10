@@ -4,6 +4,7 @@ from django.contrib.auth.hashers import make_password
 from .models  import UserModel, DriverModel, Verification
 from .form import DriverForm, VerificationForm
 from django.contrib.auth.decorators  import login_required
+from django.db.models import Q
 
 def home(request):
     return render(request, 'index.html')
@@ -65,7 +66,7 @@ def verification(request):
 
 @login_required
 def driver(request):
-    if request.user.groups.filter(name='driver').exists():
+    # if request.user.groups.filter(name='driver').exists():
         if request.method == 'POST':
             form = DriverForm(request.POST)
             if form.is_valid():
@@ -80,18 +81,26 @@ def driver(request):
             form= DriverForm()
             context ={'form' : form}
         return render(request, 'driver.html', context) 
-    else:
-        return redirect('verification')
+    # else:
+    #     return redirect('verification')
+
+def client(request):
+    return render (request, 'client.html')
 
 def driverdoc(request):
     return render(request, 'driverdoc.html')
 
+
 @login_required
 def table(request):
-    if request.user.groups.filter(name='users').exists():
+    # if request.user.groups.filter(name='users').exists():
         records = DriverModel.objects.all()
+        if request.method == 'POST':
+            rec = request.POST.get('location','destination')
+            if rec!= None:
+                records = DriverModel.objects.filter(Q(location=rec) | Q(destination=rec))
         context = {'records': records}
         return render(request, 'table.html', context)
-    else:
-        return redirect('verification')
+    # else:
+    #     return redirect('verification')
     
