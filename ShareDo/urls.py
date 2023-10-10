@@ -23,10 +23,13 @@ urlpatterns = [
     path('aboutus/', views.aboutus, name= 'aboutus'),
     path('contactus/', views.contactus, name= 'contactus'),
     path('login/', views.logins, name= 'login'),
+    path('logout/',views.logout, name='logout'),
     path('signup/', views.signup, name= 'signup'),
     path('dashboard/', views.dashboard, name= 'dashboard'),
     path('documentupload/', views.verification, name= 'verification'),
     path('driverform/', views.driver, name= 'driver'),
     path('driverdocumentupload/', views.driverdoc, name= 'driverdoc'),
     path('journeytable/', views.table, name= 'journeytable'),
+    path('clientform/', views.client, name= 'client '),
+    # path('v/', views.verified_or_not, name="vo")
 ]

@@ -23,11 +23,24 @@
             padding: 20px;
             margin: 0;
         }
+        form input[type="text"] {
+            width: 220px; 
+            height: 35px; 
+            margin: 5px 0;
+        }
+        label {
+            color: white; 
+        }
+
+        form button {
+            width: 100px; 
+            height: 40px; 
+        }
 
         table {
             width: 100%;
         border-collapse: collapse;
-        background-color: rgba(255, 255, 255, 0.5); /* Adjust the alpha value as needed */
+        background-color: rgba(255, 255, 255, 0.5); 
         margin: 20px auto;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
@@ -49,6 +62,13 @@
 </head>
 <body>
     <h1>Journey Data</h1>
+    <form  method="POST">
+        {% csrf_token %}
+        <label for="location">Location:</label>
+        <input type="text" id="location" name="search" required>
+        
+        <button type="submit" value="Search">Search</button>
+    </form>
     <table>
         <thead>
             <tr>
@@ -59,7 +79,7 @@
                 <th>Time</th>
                 <th>Passenger Seats</th>
                 <th>Ride Type</th>
-                <th>Booking</th>
+                <th>Bookings</th>
             </tr>
         </thead>
         <tbody>
@@ -72,7 +92,7 @@
                 <td>{{ record.time }}</td>
                 <td>{{ record.passenger }}</td>
                 <td>{{ record.rideType }}</td>
-                <td>Book</td>
+                <td><button onclick="bookRide({{ record.id }})">Book</button></td>
             </tr>
             {% endfor %}
         </tbody>
