@@ -66,26 +66,58 @@
     background-color: #0056b3;
   }
 
+  /* Style for the "Verify Yourself" button */
+  .verify-button {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 1; /* Ensures it's on top of other content */
+  }
 
+  .verify-button button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+
+  .verify-button button:hover {
+    background-color: #0056b3;
+  }
 </style>
 </head>
 
 <body>
+  <div class="verify-button">
+    <button type="button"><a href="{% url 'driverdoc' %}">Verify Yourself</a></button>
+  </div>
   <div class="container">
-    <h1>Mention Your Journey...</h1>
+    <h1>Describe Your Journey...</h1>
     <form method="POST" action="{% url 'driver' %}">
       {% csrf_token %}
       <label for="pickup">Location:</label>
-      <input type="text" id="pickup" name="location" required>
+      <input type="text" id="pickup" name="location" disabled value="" required>
       
       <label for="destination">Destination:</label>
-      <input type="text" id="destination" name="destination" required>
+      <input type="text" id="destination" name="destination" disabled value="" required>
+      
+      <label for="date">Date:</label>
+      <input type="date" id="date" name="date" disabled value=""  required>
       
       <label for="time">Time:</label>
-      <input type="time" id="time" name="time" required>
+      <input type="time" id="time" name="time"  disabled value="" required>
       
       <label for="passenger">Passenger seats:</label>
-      <input type="number" id="passenger" name="passenger" min="1" required>
+      <input type="number" id="passenger" name="passenger" disabled value="" required>
+
+      <label for="passenger">Passengers:</label>
+      <input type="number" id="passenger" name="passengers" required >
+
+      <label for="passenger">Offered Rent: </label>
+      <input type="number" id="rent" name="rent" required>
+      
       
       <input type="submit" value="Book Ride">
     </form>
