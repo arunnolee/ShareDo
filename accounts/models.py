@@ -36,3 +36,17 @@ class Verification(models.Model):
 
     def __str__(self):
         return self.legal_name
+    
+class ClientModel(models.Model):
+    clientname = models.OneToOneField(UserModel,  on_delete=models.CASCADE, related_name='client_profile')
+    location = models.CharField(max_length=20)
+    destination = models.CharField(max_length=20)
+    date = models.CharField(max_length=100)
+    time = models.CharField(max_length=100)
+    seats = models.IntegerField()
+    rideType = models.CharField(max_length=20, blank=True, null=True)
+    passenger = models.IntegerField()
+    rent = models.IntegerField()
+
+    def __str__(self):
+        return self.clientname.username

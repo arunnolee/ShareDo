@@ -30,5 +30,5 @@ urlpatterns = [
     path('driverform/', views.driver, name= 'driver'),
     path('driverdocumentupload/', views.driverdoc, name= 'driverdoc'),
     path('journeytable/', views.table, name= 'journeytable'),
-    path('clientform/', views.client, name= 'client '),
+    path('clientform/<int:driver_id>/', views.client, name= 'client'),
 ]

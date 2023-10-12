@@ -7,3 +7,4 @@ class UserAdmin(admin.ModelAdmin):
 admin.site.register(UserModel, UserAdmin)
 admin.site.register(models.DriverModel)
 admin.site.register(models.Verification)
+admin.site.register(models.ClientModel)

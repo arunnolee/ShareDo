@@ -69,7 +69,8 @@
         
         <button type="submit" value="Search">Search</button>
     </form>
-        <button class="option-button" onclick="location.href='{% url 'journeytable' %}'">Reset</button>
+    <button class="option-button" onclick="location.href='{% url 'journeytable' %}'">Reset</button>
+
     <table>
         <thead>
             <tr>
@@ -93,9 +94,9 @@
                 <td>{{ record.date }}</td>
                 <td>{{ record.time }}</td>
                 <td>{{ record.seats }}</td>
-                <td></td>
+                <td></td> 
                 <td>{{ record.rideType }}</td>
-                <td><button onclick="bookRide({{ record.id }})">Book</button></td>
+                <td><a href = "{% url 'client' driver_id=record.id %}" >book</a></td>
             </tr>
             {% endfor %}
         </tbody>

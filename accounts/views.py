@@ -2,7 +2,7 @@ from django.shortcuts import render, HttpResponse, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password
 from .models  import UserModel, DriverModel, Verification
-from .form import DriverForm, VerificationForm
+from .form import DriverForm, VerificationForm, ClientForm
 from django.contrib.auth.decorators  import login_required
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
@@ -94,8 +94,25 @@ def driver(request):
     return render(request, 'driver.html', context) 
    
 
-def client(request):
-    return render (request, 'client.html')
+def client(request, driver_id):
+    if request.method == 'POST':
+        form = ClientForm(request.POST)
+        print(form.data)
+        if form.is_valid():
+            client = form.save(commit=False)
+            client.clientname = request.user
+            form.save()
+            return HttpResponse('Your Ride has been booked ...')
+        else:
+            print(form.errors)
+            return HttpResponse('Ride Booking is failed.')
+    else:
+        driver = DriverModel.objects.get(id=driver_id)
+        form = ClientForm()
+        context = {
+            'driver':driver,
+            'form': form }
+    return render (request, 'client.html', context)
 
 def driverdoc(request):
     return render(request, 'driverdoc.html')
