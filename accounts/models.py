@@ -21,7 +21,7 @@ class DriverModel(models.Model):
     destination = models.CharField(max_length=20)
     date = models.DateField()
     time = models.TimeField()
-    passenger = models.IntegerField()
+    seats = models.IntegerField()
     rideType = models.CharField(max_length=20, default= 'bike')
 
     def __str__(self):

@@ -4,7 +4,7 @@ from .models import DriverModel, Verification
 class DriverForm(ModelForm):
     class Meta:
         model = DriverModel
-        fields = ['location', 'destination', 'date', 'time', 'passenger', 'rideType']
+        fields = ['location', 'destination', 'date', 'time', 'seats', 'rideType']
 
 class VerificationForm(ModelForm):
     class Meta:
