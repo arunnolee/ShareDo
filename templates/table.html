@@ -64,11 +64,12 @@
     <h1>Journey Data</h1>
     <form  method="POST">
         {% csrf_token %}
-        <label for="location">Location:</label>
+        <label for="location">Your Journey:</label>
         <input type="text" id="location" name="search" required>
         
         <button type="submit" value="Search">Search</button>
     </form>
+        <button class="option-button" onclick="location.href='{% url 'journeytable' %}'">Reset</button>
     <table>
         <thead>
             <tr>
@@ -77,7 +78,8 @@
                 <th>Destination</th>
                 <th>Date</th>
                 <th>Time</th>
-                <th>Passenger Seats</th>
+                <th>Total Seats</th>
+                <th>Available Seats</th>
                 <th>Ride Type</th>
                 <th>Bookings</th>
             </tr>
@@ -91,6 +93,7 @@
                 <td>{{ record.date }}</td>
                 <td>{{ record.time }}</td>
                 <td>{{ record.passenger }}</td>
+                <td></td>
                 <td>{{ record.rideType }}</td>
                 <td><button onclick="bookRide({{ record.id }})">Book</button></td>
             </tr>

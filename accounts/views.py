@@ -5,6 +5,8 @@ from .models  import UserModel, DriverModel, Verification
 from .form import DriverForm, VerificationForm
 from django.contrib.auth.decorators  import login_required
 from django.db.models import Q
+from django.core.exceptions import ObjectDoesNotExist
+
 
 def home(request):
     return render(request, 'index.html')
@@ -14,7 +16,7 @@ def dashboard(request):
     return render(request, 'dashboard.html')
 
 
-def logout(request):
+def logout_user(request):
     logout(request)
     return redirect('login')
 
@@ -70,23 +72,27 @@ def verification(request):
 
 @login_required
 def driver(request):
-    # if request.user.groups.filter(name='driver').exists():
-        if request.method == 'POST':
-            form = DriverForm(request.POST)
-            if form.is_valid():
-                driver = form.save(commit=False)
-                driver.drivername = request.user
-                form.save()
-                return HttpResponse('Form has been submitted....')
-            else:
-                print(form.errors)
-                return HttpResponse('Form submission failed....')
+    try:
+        if request.user.verification.is_verified == False:
+            return HttpResponse("You are not verified yet! Still pending!!!")
+    except ObjectDoesNotExist:
+        return redirect('verification')
+    
+    if request.method == 'POST':
+        form = DriverForm(request.POST)
+        if form.is_valid():
+            driver = form.save(commit=False)
+            driver.drivername = request.user
+            form.save()
+            return HttpResponse('Form has been submitted....')
         else:
-            form= DriverForm()
-            context ={'form' : form}
-        return render(request, 'driver.html', context) 
-    # else:
-    #     return redirect('verification')
+            print(form.errors)
+            return HttpResponse('Form submission failed....')
+    else:
+        form= DriverForm()
+        context ={'form' : form}
+    return render(request, 'driver.html', context) 
+   
 
 def client(request):
     return render (request, 'client.html')
@@ -96,26 +102,22 @@ def driverdoc(request):
 
 
 def table(request):
+    """
+    list of destinattion.
+    """
+    try:
+        if request.user.verification.is_verified == False:
+            return HttpResponse("You are not verified yet! Still pending!!!")
+    except ObjectDoesNotExist:
+        return redirect('verification')
     
     records = DriverModel.objects.all()
-    try:
-        if request.user.verification.is_verified == True:
-            if request.method == 'POST':
-                search = request.POST.get('search')
-                if search != None:
-                    records = DriverModel.objects.filter(Q(location__contains=search) | Q(destination__contains=search)) 
-        else:
-            return HttpResponse("You are not verified yet!!!")
-        context = {'records': records}
-        return render(request, 'table.html', context)
-    except:
-        return redirect('verification')
+    if request.method == 'POST':
+        search = request.POST.get('search')
+        if search:
+            records = DriverModel.objects.filter(Q(location__contains=search) | Q(destination__contains=search))
 
+    context = {'records': records}
+    return render(request, 'table.html', context)
 
-# def verified_or_not(request):
-#     if request.user.verification.is_verified == True:
-#         return redirect('journeytable')
-#     else:
-#         return redirect('verification')
-    
         
