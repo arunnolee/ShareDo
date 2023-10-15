@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Driver Data</title>
+    <title>DriverJourneyData</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -86,17 +86,17 @@
             </tr>
         </thead>
         <tbody>
-            {% for record in records %}
+            {% for ride in driver_rides %}
             <tr>
-                <td>{{ record.drivername.username }}</td>
-                <td>{{ record.location }}</td>
-                <td>{{ record.destination }}</td>
-                <td>{{ record.date }}</td>
-                <td>{{ record.time }}</td>
-                <td>{{ record.seats }}</td>
+                <td>{{ ride.drivername.username }}</td>
+                <td>{{ ride.location }}</td>
+                <td>{{ ride.destination }}</td>
+                <td>{{ ride.date }}</td>
+                <td>{{ ride.time }}</td>
+                <td>{{ ride.seats }}</td>
                 <td></td> 
-                <td>{{ record.rideType }}</td>
-                <td><a href = "{% url 'client' driver_id=record.id %}" >book</a></td>
+                <td>{{ ride.rideType }}</td>
+                <td><a href = "{% url 'ride_request' id=ride.id %}" >see</a></td>
             </tr>
             {% endfor %}
         </tbody>

@@ -98,19 +98,22 @@
     <form method="POST" >
       {% csrf_token %}
       <label for="pickup">Location:</label>
-      <input  id="pickup" name="location" readonly value="{{driver.location}}" required>
+      <input  id="pickup" name="location" disabled value="{{driver.location}}" required>
       
       <label for="destination">Destination:</label>
-      <input id="destination" name="destination" readonly value="{{driver.destination}}" required>
+      <input id="destination" name="destination" disabled value="{{driver.destination}}" required>
       
       <label for="date">Date:</label>
-      <input id="date" name="date" readonly value="{{driver.date}}"  required>
+      <input id="date" name="date" disabled value="{{driver.date}}"  required>
       
       <label for="time">Time:</label>
-      <input id="time" name="time"  readonly value="{{driver.time}}" required>
+      <input id="time" name="time"  disabled value="{{driver.time}}" required>
       
       <label for="seats">Passenger seats:</label>
-      <input id="seats" name="seats" readonly value="{{driver.seats}}" required>
+      <input id="seats" name="seats" disabled value="{{driver.seats}}" required>
+
+      <label for="rideType">Passenger seats:</label>
+      <input id="rideType" name="rideType" disabled value="{{driver.rideType}}" required>
 
       <label for="passenger">Passengers:</label>
       <input type="number" id="passenger" name="passenger" min ="1" required >

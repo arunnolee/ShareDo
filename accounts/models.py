@@ -11,21 +11,21 @@ class UserModel(AbstractUser):
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email', 'password']
 
-class DriverModel(models.Model):
+# class DriverModel(models.Model):
 
-    class RideType(models.Choices):
+#     class RideType(models.Choices):
         
-        pass
-    drivername = models.OneToOneField(UserModel,  on_delete=models.CASCADE, related_name='driver_profile')
-    location = models.CharField(max_length=20)
-    destination = models.CharField(max_length=20)
-    date = models.DateField()
-    time = models.TimeField()
-    seats = models.IntegerField()
-    rideType = models.CharField(max_length=20, default= 'bike')
+#         pass
+#     drivername = models.OneToOneField(UserModel,  on_delete=models.CASCADE, related_name='driver_profile')
+#     location = models.CharField(max_length=20)
+#     destination = models.CharField(max_length=20)
+#     date = models.DateField()
+#     time = models.TimeField()
+#     seats = models.IntegerField()
+#     rideType = models.CharField(max_length=20, default= 'bike')
 
-    def __str__(self):
-        return self.drivername.username
+#     def __str__(self):
+#         return self.drivername.username
     
 class Verification(models.Model):
     user = models.OneToOneField(UserModel, on_delete=models.CASCADE, related_name='verification')
@@ -37,16 +37,37 @@ class Verification(models.Model):
     def __str__(self):
         return self.legal_name
     
-class ClientModel(models.Model):
-    clientname = models.OneToOneField(UserModel,  on_delete=models.CASCADE, related_name='client_profile')
+# class ClientModel(models.Model):
+#     clientname = models.OneToOneField(UserModel,  on_delete=models.CASCADE, related_name='client_profile')
+#     location = models.CharField(max_length=20)
+#     destination = models.CharField(max_length=20)
+#     date = models.CharField(max_length=100)
+#     time = models.CharField(max_length=100)
+#     seats = models.IntegerField()
+#     rideType = models.CharField(max_length=20, blank=True, null=True)
+#     passenger = models.IntegerField()
+#     rent = models.IntegerField()
+
+#     def __str__(self):
+#         return self.clientname.username
+
+
+class RideModel(models.Model):
+    clientname = models.OneToOneField(UserModel,  on_delete=models.CASCADE, related_name='client_profile', null=True)
+    drivername = models.OneToOneField(UserModel, on_delete=models.CASCADE, related_name="driver_profile", null=True)
     location = models.CharField(max_length=20)
     destination = models.CharField(max_length=20)
     date = models.CharField(max_length=100)
     time = models.CharField(max_length=100)
     seats = models.IntegerField()
     rideType = models.CharField(max_length=20, blank=True, null=True)
-    passenger = models.IntegerField()
-    rent = models.IntegerField()
+    passenger = models.IntegerField(blank=True, null=True)
+    rent = models.IntegerField(blank=True, null=True)
+    accept = models.BooleanField()
 
     def __str__(self):
-        return self.clientname.username
+        return self.location
+    
+    @property
+    def available_seats(self):
+        return self.seats - self.passenger

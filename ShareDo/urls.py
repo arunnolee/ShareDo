@@ -29,6 +29,8 @@ urlpatterns = [
     path('documentupload/', views.verification, name= 'verification'),
     path('driverform/', views.driver, name= 'driver'),
     path('driverdocumentupload/', views.driverdoc, name= 'driverdoc'),
-    path('journeytable/', views.table, name= 'journeytable'),
+    path('journeytable/', views.drivertable, name= 'journeytable'),
     path('clientform/<int:driver_id>/', views.client, name= 'client'),
+    path('bookedtable/', views.ride_table, name= 'bookedtable'),
+    path('ride-request/<int:id>/', views.ride_request, name= 'ride_request'),
 ]

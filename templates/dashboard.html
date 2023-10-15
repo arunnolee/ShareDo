@@ -77,6 +77,9 @@
     <div class="header">
         <button class="verify-button" onclick="location.href='{% url 'verification' %}'">Verify Yourself</button>
     </div>
+    <div class="middle">
+        <button class="verify-button">{{request.user}}</button>
+    </div>
     <div class="container"><br><br>
         <h1> Welcome to ShareDo</h1>
         <div class="options">

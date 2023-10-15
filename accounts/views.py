@@ -1,8 +1,8 @@
 from django.shortcuts import render, HttpResponse, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password
-from .models  import UserModel, DriverModel, Verification
-from .form import DriverForm, VerificationForm, ClientForm
+from .models  import UserModel, Verification, RideModel
+from .form import DriverRideForm, VerificationForm, ClientRideForm
 from django.contrib.auth.decorators  import login_required
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
@@ -79,7 +79,7 @@ def driver(request):
         return redirect('verification')
     
     if request.method == 'POST':
-        form = DriverForm(request.POST)
+        form = DriverRideForm(request.POST)
         if form.is_valid():
             driver = form.save(commit=False)
             driver.drivername = request.user
@@ -89,26 +89,26 @@ def driver(request):
             print(form.errors)
             return HttpResponse('Form submission failed....')
     else:
-        form= DriverForm()
+        form= DriverRideForm()
         context ={'form' : form}
     return render(request, 'driver.html', context) 
    
 
 def client(request, driver_id):
     if request.method == 'POST':
-        form = ClientForm(request.POST)
-        print(form.data)
+        form = ClientRideForm(request.POST)
         if form.is_valid():
-            client = form.save(commit=False)
-            client.clientname = request.user
-            form.save()
+            # client = form.save(commit=False)
+            # client.clientname = request.user
+            # form.save()
+            RideModel.objects.update(clientname=request.user, **form.cleaned_data)
             return HttpResponse('Your Ride has been booked ...')
         else:
             print(form.errors)
             return HttpResponse('Ride Booking is failed.')
     else:
-        driver = DriverModel.objects.get(id=driver_id)
-        form = ClientForm()
+        driver = RideModel.objects.get(id=driver_id)
+        form = ClientRideForm()
         context = {
             'driver':driver,
             'form': form }
@@ -118,7 +118,7 @@ def driverdoc(request):
     return render(request, 'driverdoc.html')
 
 
-def table(request):
+def drivertable(request):
     """
     list of destinattion.
     """
@@ -128,13 +128,22 @@ def table(request):
     except ObjectDoesNotExist:
         return redirect('verification')
     
-    records = DriverModel.objects.all()
+    records = RideModel.objects.exclude(drivername=request.user)
     if request.method == 'POST':
         search = request.POST.get('search')
         if search:
-            records = DriverModel.objects.filter(Q(location__contains=search) | Q(destination__contains=search))
+            records = RideModel.objects.filter(Q(location__contains=search) | Q(destination__contains=search))
 
     context = {'records': records}
-    return render(request, 'table.html', context)
+    return render(request, 'driver_table.html', context)
 
-        
+def ride_table(request):
+    driver_rides = RideModel.objects.filter(drivername=request.user)
+    context = {'driver_rides': driver_rides}
+    return render(request, 'driver_rides.html', context)
+
+
+def ride_request(request, id):
+    ride = RideModel.objects.get(id=id)
+    context = {'ride': ride}
+    return render(request, 'client_table.html', context)

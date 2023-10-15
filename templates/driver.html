@@ -83,6 +83,20 @@
     cursor: pointer;
   }
 
+  .your-bookings button{
+    position: absolute;
+    top: 10px; 
+    right: 10px;
+    z-index: 1;
+  }
+  .your-bookings button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+  }
   .verify-button button:hover {
     background-color: #0056b3;
   }
@@ -92,6 +106,9 @@
 <body>
   <div class="verify-button">
     <button type="button"><a href="{% url 'driverdoc' %}">Verify Yourself</a></button>
+  </div>
+  <div class="your-bookings">
+    <button type="button"><a href="{% url 'bookedtable' %}">Your Bookings</a></button>
   </div>
   <div class="container">
     <h1>Describe Your Journey...</h1>
