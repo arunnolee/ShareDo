@@ -53,7 +53,7 @@ class Verification(models.Model):
 
 
 class RideModel(models.Model):
-    clientname = models.OneToOneField(UserModel,  on_delete=models.CASCADE, related_name='client_profile', null=True)
+    clientname = models.OneToOneField(UserModel,  on_delete=models.CASCADE, related_name='client_profile', blank=True, null=True)
     drivername = models.OneToOneField(UserModel, on_delete=models.CASCADE, related_name="driver_profile", null=True)
     location = models.CharField(max_length=20)
     destination = models.CharField(max_length=20)
@@ -63,7 +63,7 @@ class RideModel(models.Model):
     rideType = models.CharField(max_length=20, blank=True, null=True)
     passenger = models.IntegerField(blank=True, null=True)
     rent = models.IntegerField(blank=True, null=True)
-    accept = models.BooleanField()
+    accept = models.BooleanField(blank=True, null=True)
 
     def __str__(self):
         return self.location

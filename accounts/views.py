@@ -77,9 +77,10 @@ def driver(request):
             return HttpResponse("You are not verified yet! Still pending!!!")
     except ObjectDoesNotExist:
         return redirect('verification')
-    
+    # print("--------user------------", request.user)
     if request.method == 'POST':
         form = DriverRideForm(request.POST)
+        # print(form.data)
         if form.is_valid():
             driver = form.save(commit=False)
             driver.drivername = request.user
@@ -98,10 +99,15 @@ def client(request, driver_id):
     if request.method == 'POST':
         form = ClientRideForm(request.POST)
         if form.is_valid():
-            # client = form.save(commit=False)
-            # client.clientname = request.user
-            # form.save()
-            RideModel.objects.update(clientname=request.user, **form.cleaned_data)
+            ride_instance = RideModel.objects.get(id=driver_id)
+
+            # Update the fields of the instance
+            ride_instance.clientname = request.user
+            ride_instance.passenger = form.cleaned_data['passenger']
+            ride_instance.rent = form.cleaned_data['rent']
+
+            # Save the updated instance
+            ride_instance.save()
             return HttpResponse('Your Ride has been booked ...')
         else:
             print(form.errors)
