@@ -1,0 +1,103 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DriverJourneyData</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url("{% static 'images/bg.jpg' %}");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            background-color: #007bff;
+            color: #fff;
+            padding: 20px;
+            margin: 0;
+        }
+        form input[type="text"] {
+            width: 220px; 
+            height: 35px; 
+            margin: 5px 0;
+        }
+        label {
+            color: white; 
+        }
+
+        form button {
+            width: 100px; 
+            height: 40px; 
+        }
+
+        table {
+            width: 100%;
+        border-collapse: collapse;
+        background-color: rgba(255, 255, 255, 0.5); 
+        margin: 20px auto;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <h1>Journey Data</h1>
+    <form  method="POST">
+        {% csrf_token %}
+        <label for="location">Your Journey:</label>
+        <input type="text" id="location" name="search" required>
+        
+        <button type="submit" value="Search">Search</button>
+    </form>
+    <button class="option-button" onclick="location.href='{% url 'journeytable' %}'">Reset</button>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Driver Name</th>
+                <th>Location</th>
+                <th>Destination</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Total Seats</th>
+                <th>Ride Type</th>
+                <th>Bookings</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in records %}
+            <tr>
+                <td>{{ record.drivername.username }}</td>
+                <td>{{ record.location }}</td>
+                <td>{{ record.destination }}</td>
+                <td>{{ record.date }}</td>
+                <td>{{ record.time }}</td>
+                <td>{{ record.seats }}</td>
+                <td>{{ record.rideType }}</td>
+                <td><a href = "{% url 'client' driver_id=record.id %}" >book</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

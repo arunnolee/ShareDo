@@ -29,6 +29,13 @@ urlpatterns = [
     path('documentupload/', views.verification, name= 'verification'),
     path('driverform/', views.driver, name= 'driver'),
     path('driverdocumentupload/', views.driverdoc, name= 'driverdoc'),
-    path('journeytable/', views.table, name= 'journeytable'),
-    path('clientform/', views.client, name= 'client '),
+    path('journeytable/', views.drivertable, name= 'journeytable'),
+    path('clientform/<int:driver_id>/', views.client, name= 'client'),
+    path('bookedtable/', views.ride_table, name= 'bookedtable'),
+    path('ride-request/<int:id>/', views.ride_request, name= 'ride_request'),
+
+    path('driver_accept/', views.driver_accept, name= 'driver_accept'),
+    path('driver_reject/', views.driver_reject, name= 'driver_reject'),
+    path('accept_text/', views.accept_text, name= 'accept_text'),
+    path('decline_text/', views.decline_text, name= 'decline_text'),
 ]

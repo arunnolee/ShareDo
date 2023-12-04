@@ -1,8 +1,8 @@
 from django.shortcuts import render, HttpResponse, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password
-from .models  import UserModel, DriverModel, Verification
-from .form import DriverForm, VerificationForm
+from .models  import UserModel, Verification, RideModel, Rent
+from .form import DriverRideForm, VerificationForm, ClientRideForm, ContactUsForm
 from django.contrib.auth.decorators  import login_required
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
@@ -57,7 +57,17 @@ def aboutus(request):
     return render(request, 'aboutus.html')
 
 def contactus(request):
-    return render(request, 'contactus.html')
+    if request.method == 'POST':
+        form = ContactUsForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponse('Your message has been submitted:')
+        else:
+            return HttpResponse('ERROR:')
+    else:
+        form = ContactUsForm()
+        context= {'form': form}
+    return render(request, 'contactus.html', context)
 
 def verification(request):
     if request.method == 'POST':
@@ -77,9 +87,8 @@ def driver(request):
             return HttpResponse("You are not verified yet! Still pending!!!")
     except ObjectDoesNotExist:
         return redirect('verification')
-    
     if request.method == 'POST':
-        form = DriverForm(request.POST)
+        form = DriverRideForm(request.POST)
         if form.is_valid():
             driver = form.save(commit=False)
             driver.drivername = request.user
@@ -89,19 +98,38 @@ def driver(request):
             print(form.errors)
             return HttpResponse('Form submission failed....')
     else:
-        form= DriverForm()
+        form= DriverRideForm()
         context ={'form' : form}
     return render(request, 'driver.html', context) 
    
 
-def client(request):
-    return render (request, 'client.html')
+def client(request, driver_id):
+    ride_object = RideModel.objects.get(id=driver_id)
+    r = Rent.objects.filter(ride=driver_id)
+    booked_seat = len(r)
+    available_seats = ride_object.seats - booked_seat
+
+    if request.method == "POST":
+        rent = request.POST.get("rent")
+        if Rent.objects.filter(user_client=request.user, ride=driver_id).exists():
+            return HttpResponse("You have already booked")
+        else:
+            Rent.objects.create(user_client=request.user, ride=ride_object, rent=rent)
+            return HttpResponse("created")
+    context = {'driver': ride_object, 'available_seats': available_seats}
+    return render (request, 'client.html', context)
+
+def ride_request(request, id):
+    ride = Rent.objects.get(id=id)
+    context = {'ride': ride}
+    return render(request, 'client_table.html', context)
+
 
 def driverdoc(request):
     return render(request, 'driverdoc.html')
 
 
-def table(request):
+def drivertable(request):
     """
     list of destinattion.
     """
@@ -110,14 +138,32 @@ def table(request):
             return HttpResponse("You are not verified yet! Still pending!!!")
     except ObjectDoesNotExist:
         return redirect('verification')
-    
-    records = DriverModel.objects.all()
+
+    records = RideModel.objects.exclude(drivername=request.user)
     if request.method == 'POST':
         search = request.POST.get('search')
         if search:
-            records = DriverModel.objects.filter(Q(location__contains=search) | Q(destination__contains=search))
+            records = RideModel.objects.filter(Q(location__contains=search) | Q(destination__contains=search))
 
     context = {'records': records}
-    return render(request, 'table.html', context)
+    return render(request, 'driver_table.html', context)
 
-        
+def ride_table(request):
+    driver = RideModel.objects.get(drivername=request.user)
+    driver_rides = Rent.objects.filter(ride=driver)
+    context = {'driver_rides': driver_rides}
+    return render(request, 'driver_rides.html', context)
+
+
+
+def driver_accept(request):
+    return render(request, 'driver_accept.html')
+
+def driver_reject(request):
+    return render(request, 'driver_reject.html')
+
+def decline_text(request):
+    return render(request, 'decline_text.html')
+
+def accept_text(request):
+    return render(request, 'accept_text.html')

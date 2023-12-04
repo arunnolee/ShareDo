@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Driver Data</title>
+    <title>DriverJourneyData</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -69,33 +69,34 @@
         
         <button type="submit" value="Search">Search</button>
     </form>
-        <button class="option-button" onclick="location.href='{% url 'journeytable' %}'">Reset</button>
+    <button class="option-button" onclick="location.href='{% url 'journeytable' %}'">Reset</button>
+
     <table>
         <thead>
             <tr>
-                <th>Driver Name</th>
                 <th>Location</th>
                 <th>Destination</th>
                 <th>Date</th>
                 <th>Time</th>
                 <th>Total Seats</th>
-                <th>Available Seats</th>
                 <th>Ride Type</th>
+                <th>Client Name</th>
+                <th>Rent</th>
                 <th>Bookings</th>
             </tr>
         </thead>
         <tbody>
-            {% for record in records %}
+            {% for ride in driver_rides %}
             <tr>
-                <td>{{ record.drivername.username }}</td>
-                <td>{{ record.location }}</td>
-                <td>{{ record.destination }}</td>
-                <td>{{ record.date }}</td>
-                <td>{{ record.time }}</td>
-                <td>{{ record.seats }}</td>
-                <td></td>
-                <td>{{ record.rideType }}</td>
-                <td><button onclick="bookRide({{ record.id }})">Book</button></td>
+                <td>{{ ride.ride.location }}</td>
+                <td>{{ ride.ride.destination }}</td>
+                <td>{{ ride.ride.date }}</td>
+                <td>{{ ride.ride.time }}</td>
+                <td>{{ ride.ride.seats }}</td>
+                <td>{{ ride.ride.rideType }}</td>
+                <td>{{ride.user_client}}</td> 
+                <td>{{ ride.rent }}</td>
+                <td><a href = "{% url 'ride_request' id=ride.id %}" >see</a></td>
             </tr>
             {% endfor %}
         </tbody>

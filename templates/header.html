@@ -85,7 +85,11 @@
                                  <a class="nav-link" href="{% url 'contactus' %}">Contact us</a>
                               </li>
                            </ul>
+                           {% if request.user.is_authenticated %}
+                              <div class="sign_btn"><a href="{% url 'login' %}">{{user}}</a></div>
+                           {% else %}
                            <div class="sign_btn"><a href="{% url 'login' %}">Log in</a></div>
+                           {% endif %}
                         </div>
                      </nav>
                   </div>
