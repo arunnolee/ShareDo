@@ -80,7 +80,6 @@
                 <th>Date</th>
                 <th>Time</th>
                 <th>Total Seats</th>
-                <th>Available Seats</th>
                 <th>Ride Type</th>
                 <th>Bookings</th>
             </tr>
@@ -94,9 +93,6 @@
                 <td>{{ record.date }}</td>
                 <td>{{ record.time }}</td>
                 <td>{{ record.seats }}</td>
-                <td>
-                0    
-                </td> 
                 <td>{{ record.rideType }}</td>
                 <td><a href = "{% url 'client' driver_id=record.id %}" >book</a></td>
             </tr>

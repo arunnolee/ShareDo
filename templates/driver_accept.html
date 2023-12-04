@@ -29,17 +29,14 @@
             margin-bottom: 20px;
             color: #333;
         }
-
         p {
             font-weight: bold;
             margin-bottom: 10px;
         }
-
         .buttons {
             text-align: center;
             margin-top: 20px;
         }
-
         .buttons button {
             background-color: #007bff;
             color: #fff;
@@ -53,19 +50,17 @@
 </head>
 <body>
     <div class="container">
-        <h1>Journey Details</h1>
-        <p>Client Name: {{ ride.user_client.username }}</p>
-        <p>Location: {{ ride.ride.location }}</p>
-        <p>Destination: {{ ride.ride.destination }}</p>
-        <p>Date: {{ ride.ride.date }}</p>
-        <p>Time: {{ ride.ride.time }}</p>
-        <p>Ride Type: {{ ride.ride.rideType }}</p>
+        <h1>Ride Request accepted...</h1>
+        <p>Client Name: {{ ride.clientname }}</p>
+        <p>Location: {{ ride.location }}</p>
+        <p>Destination: {{ ride.destination }}</p>
+        <p>Date: {{ ride.date }}</p>
+        <p>Time: {{ ride.time }}</p>
+        <p>Passenger Seats: {{ ride.seats }}</p>
+        <p>Ride Type: {{ ride.rideType }}</p>
+        <p>Number of Passengers: {{ ride.passenger }}</p>
         <p>Offered Rent: {{ ride.rent }}</p>
-        
-        <div class="buttons">
-            <button id="acceptButton"> <a href = "{% url 'driver_accept' %}" >Accept</button>
-            <button id="declineButton"><a href = "{% url 'driver_reject' %}" >Decline</button>
-        </div>
+        <p>Client's Phone Number:</p>
     </div>
 </body>
 </html>

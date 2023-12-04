@@ -53,19 +53,8 @@
 </head>
 <body>
     <div class="container">
-        <h1>Journey Details</h1>
-        <p>Client Name: {{ ride.user_client.username }}</p>
-        <p>Location: {{ ride.ride.location }}</p>
-        <p>Destination: {{ ride.ride.destination }}</p>
-        <p>Date: {{ ride.ride.date }}</p>
-        <p>Time: {{ ride.ride.time }}</p>
-        <p>Ride Type: {{ ride.ride.rideType }}</p>
-        <p>Offered Rent: {{ ride.rent }}</p>
-        
-        <div class="buttons">
-            <button id="acceptButton"> <a href = "{% url 'driver_accept' %}" >Accept</button>
-            <button id="declineButton"><a href = "{% url 'driver_reject' %}" >Decline</button>
-        </div>
+        <h1>Your Ride Request has been Rejected...</h1>
+        <button id="reformButton"> <a href = "{% url 'journeytable' %}" >Submit Request again</button>
     </div>
 </body>
 </html>
