@@ -74,13 +74,13 @@
     <table>
         <thead>
             <tr>
+                <th>Client Name</th>
                 <th>Location</th>
                 <th>Destination</th>
                 <th>Date</th>
                 <th>Time</th>
                 <th>Total Seats</th>
                 <th>Ride Type</th>
-                <th>Client Name</th>
                 <th>Rent</th>
                 <th>Bookings</th>
             </tr>
@@ -88,15 +88,15 @@
         <tbody>
             {% for ride in driver_rides %}
             <tr>
+                <td>{{ride.user_client}}</td> 
                 <td>{{ ride.ride.location }}</td>
                 <td>{{ ride.ride.destination }}</td>
                 <td>{{ ride.ride.date }}</td>
                 <td>{{ ride.ride.time }}</td>
                 <td>{{ ride.ride.seats }}</td>
                 <td>{{ ride.ride.rideType }}</td>
-                <td>{{ride.user_client}}</td> 
                 <td>{{ ride.rent }}</td>
-                <td><a href = "{% url 'ride_request' id=ride.id %}" >see</a></td>
+                <td><a href = "{% url 'ride_request' id=ride.id %}" >view</a></td>
             </tr>
             {% endfor %}
         </tbody>

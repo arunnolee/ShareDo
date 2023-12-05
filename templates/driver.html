@@ -139,6 +139,9 @@
       </select>
       
       <input type="submit" value="Post Journey">
+      {% for message in messages %}
+    {{ message }}
+    {% endfor %}
     </form>
   </div>
 </body>

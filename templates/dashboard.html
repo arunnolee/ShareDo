@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ShareDo</title>
@@ -17,6 +18,42 @@
             margin: 0;
             padding: 0;
         }
+        /* Add this to your existing CSS */
+.top-right {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.middle {
+    display: flex;
+    gap: 20px;
+}
+
+.verify-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 18px; /* Adjust the font size as needed */
+}
+
+.logout-button {
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 18px; /* Adjust the font size as needed */
+}
+
+.logout-button:hover {
+    background-color: #c82333;
+}
+
         
         .container {
             display: flex;
@@ -25,7 +62,10 @@
             align-items: center;
             height: 100vh;
         }
-
+        
+        .message_alert {
+            color: white;
+        }
         .header {
             display: flex;
             justify-content: flex-start;
@@ -77,11 +117,23 @@
     <div class="header">
         <button class="verify-button" onclick="location.href='{% url 'verification' %}'">Verify Yourself</button>
     </div>
-    <div class="middle">
-        <button class="verify-button">{{request.user}}</button>
+    <div class="top-right">
+        <div class="middle">
+            <button class="verify-button">{{ request.user }}</button>
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button class="logout-button" type="submit">Logout</button>
+            </form>
+        </div>
     </div>
     <div class="container"><br><br>
+    
         <h1> Welcome to ShareDo</h1>
+        {% for message in messages %}
+    <div class="message_alert">
+    {{ message }}
+    </div>
+{% endfor %}
         <div class="options">
             <button class="option-button" onclick="location.href='{% url 'journeytable' %}'">Do you need ride??</button>
             <button class="option-button" onclick="location.href='{% url 'driver' %}'">Are you a driver ??</button>

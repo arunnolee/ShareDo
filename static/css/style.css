@@ -313,14 +313,6 @@ button {
 }
 
 
-/*-- header area --*/
-
-
-/*--------------------------------------------------------------------- top banner area ---------------------------------------------------------------------*/
-
-
-/*--------------------------------------------------------------------- layout new css ---------------------------------------------------------------------*/
-
 .header {
      width: 100%;
      background: #fff;
@@ -348,6 +340,7 @@ button {
      align-items: center;
      background-size: 100% 100%;
 }
+
 
 .text-bg {
      text-align: center;
@@ -481,11 +474,6 @@ button {
      padding: 0;
 }
 
-
-/** end car section **/
-
-
-/** bestCar section **/
 
 .bestCar {
      margin-top: 90px;

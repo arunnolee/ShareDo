@@ -6,6 +6,7 @@ from .form import DriverRideForm, VerificationForm, ClientRideForm, ContactUsFor
 from django.contrib.auth.decorators  import login_required
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib import messages
 
 
 def home(request):
@@ -29,7 +30,8 @@ def logins(request):
             login(request,useradmin)
             return redirect ('dashboard')
         else:
-            return HttpResponse("login failed")
+            messages.success(request,"No User Found. Create an account first.")
+            return redirect('login')
     else:
         return render(request, 'login.html')
 
@@ -48,8 +50,8 @@ def signup(request):
             return render(request, 'signup.html', {'error': 'Email already existed'})
         
         UserModel.objects.create(username=username, email=email, password=make_password(password), confirm_password=make_password(confirm_password))
+        messages.success(request, "Account created Succesfully")
         return redirect('login')
-        # return HttpResponse('Account Created Successfully')
 
     return render(request, 'signup.html')
 
@@ -75,16 +77,19 @@ def verification(request):
             if form.is_valid():
                 form.save(commit=False)
                 Verification.objects.create(user_id=request.user.id, **form.cleaned_data)
-                return HttpResponse('Verification Process has been submitted....')
+                messages.success(request, 'Verification Process has been submitted....')
+                return redirect( 'dashboard')
             else:
-                return HttpResponse('Verification Process submission failed....')
+                messages.error(request, 'Verification Process submission failed....')
+                return redirect( 'dashboard')
     return render(request, 'verification.html')
 
 @login_required
 def driver(request):
     try:
         if request.user.verification.is_verified == False:
-            return HttpResponse("You are not verified yet! Still pending!!!")
+            messages.success(request,"You are not verified yet! Still pending!!!")
+            return redirect('dashboard')
     except ObjectDoesNotExist:
         return redirect('verification')
     if request.method == 'POST':
@@ -93,10 +98,12 @@ def driver(request):
             driver = form.save(commit=False)
             driver.drivername = request.user
             form.save()
-            return HttpResponse('Form has been submitted....')
+            messages.success(request, "Form has been submitted....")
+            return redirect("driver")
         else:
             print(form.errors)
-            return HttpResponse('Form submission failed....')
+            messages.error(request, 'Form submission failed....')
+            return redirect('driver')
     else:
         form= DriverRideForm()
         context ={'form' : form}
@@ -112,10 +119,12 @@ def client(request, driver_id):
     if request.method == "POST":
         rent = request.POST.get("rent")
         if Rent.objects.filter(user_client=request.user, ride=driver_id).exists():
-            return HttpResponse("You have already booked")
+            messages.success(request,"You have already booked the seat.")
+            return redirect('client',driver_id=driver_id)
         else:
             Rent.objects.create(user_client=request.user, ride=ride_object, rent=rent)
-            return HttpResponse("created")
+            messages.success(request,"You booked a seat.")
+            return redirect('client',driver_id=driver_id)
     context = {'driver': ride_object, 'available_seats': available_seats}
     return render (request, 'client.html', context)
 
@@ -135,7 +144,8 @@ def drivertable(request):
     """
     try:
         if request.user.verification.is_verified == False:
-            return HttpResponse("You are not verified yet! Still pending!!!")
+            messages.success(request,"You are not verified yet! Still pending!!!")
+            return redirect('dashboard')
     except ObjectDoesNotExist:
         return redirect('verification')
 
