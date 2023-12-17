@@ -1,0 +1,75 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            /* Background image URL */
+            background-image: url("{% static 'images/bg.jpg' %}"); /* Replace 'path_to_your_image.jpg' with the actual image URL or file path */
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1, h2 {
+            color: #FF6347;
+        }
+
+        p {
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+
+        .verification-info {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        .no-info {
+            color: #888;
+        }
+
+    </style>
+</head>
+<body>
+
+<h1>User Profile</h1>
+
+<p>User: {{ user.username }}</p>
+<p>Email: {{ user.email }}</p>
+
+<h2>Verification Information</h2>
+{% if user.verification %}
+    <p>Legal Name: {{ user.verification.legal_name }}</p>
+    <p>Phone Number: {{ user.verification.phone_number }}</p>
+    <p>Is Verified: {% if user.verification.is_verified %}Yes{% else %}No{% endif %}</p>
+    {% if user.verification.citizenship_photo %}
+        <img src="{{ user.verification.citizenship_photo.url }}" alt="Citizenship Photo">
+    {% else %}
+        <p>No citizenship photo available.</p>
+    {% endif %}
+{% else %}
+    <p>No verification information found.</p>
+{% endif %}
+
+</body>
+</html>

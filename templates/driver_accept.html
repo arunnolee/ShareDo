@@ -8,7 +8,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-image: url("{% static 'images/goggle.jpg' %}");
+            background-image: url("{% static 'images/road.jpg' %}");
             background-size: cover;
             background-repeat: no-repeat;
             margin: 0;
@@ -51,14 +51,16 @@
 <body>
     <div class="container">
         <h1>Ride Request accepted...</h1>
-        <p>Client Name: {{ ride.clientname }}</p>
-        <p>Location: {{ ride.location }}</p>
-        <p>Destination: {{ ride.destination }}</p>
-        <p>Date: {{ ride.date }}</p>
-        <p>Time: {{ ride.time }}</p>
-        <p>Ride Type: {{ ride.rideType }}</p>
-        <p>Offered Rent: {{ ride.rent }}</p>
-        <p>Client's Phone Number:</p>
+        <p>Client Name: {{ ride_accp.user_client.username }}</p>
+        <p>Location: {{ ride_accp.ride.location }}</p>
+        <p>Destination: {{ ride_accp.ride.destination }}</p>
+        <p>Date: {{ ride_accp.ride.date }}</p>
+        <p>Time: {{ ride_accp.ride.time }}</p>
+        <p>Ride Type: {{ ride_accp.ride.rideType }}</p>
+        <p>Offered Rent: {{ ride_accp.rent }}</p>
+        {% if request.user %}
+        <p>Client's Phone Number: {{ride_accp.user_client.verification.phone_number }}</p>
+        {% endif %}
     </div>
 </body>
 </html>

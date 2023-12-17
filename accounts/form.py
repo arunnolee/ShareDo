@@ -1,15 +1,5 @@
 from django.forms import ModelForm
-from .models import Verification, RideModel, ContactUsModel
-
-# class DriverForm(ModelForm):
-#     class Meta:
-#         model = DriverModel
-#         fields = ['location', 'destination', 'date', 'time', 'seats', 'rideType']
-
-# class ClientForm(ModelForm):
-#     class Meta:
-#         model = ClientModel
-#         fields =['location', 'destination', 'date', 'time', 'seats', 'rideType', 'passenger', 'rent']
+from .models import Verification, RideModel, ContactUsModel, Rent, DriverVerification
 
 class VerificationForm(ModelForm):
     class Meta:
@@ -30,3 +20,14 @@ class ContactUsForm(ModelForm):
     class Meta:
         model = ContactUsModel
         fields = ['name', 'email', 'message']
+
+class RentForm(ModelForm):
+    class Meta:
+        model = Rent
+        fields = ['requestAccept']
+
+
+class DriverVerificationForm(ModelForm):
+    class Meta:
+        model = DriverVerification
+        fields = ["photo", "license"]

@@ -37,6 +37,17 @@
             height: 40px; 
         }
 
+        .notification-button {
+            position: fixed;
+            right: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
         table {
             width: 100%;
         border-collapse: collapse;
@@ -70,6 +81,7 @@
         <button type="submit" value="Search">Search</button>
     </form>
     <button class="option-button" onclick="location.href='{% url 'journeytable' %}'">Reset</button>
+    <button class="notification-button" onclick="window.location.href='{% url 'my_ride_detail' %}'">My Ride Details</button>
 
     <table>
         <thead>

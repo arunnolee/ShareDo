@@ -32,6 +32,16 @@
             color: white; 
         }
 
+        .dashboard-button {
+            position: absolute;
+            right: 20px;
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+        }
+
         form button {
             width: 100px; 
             height: 40px; 
@@ -70,7 +80,7 @@
         <button type="submit" value="Search">Search</button>
     </form>
     <button class="option-button" onclick="location.href='{% url 'journeytable' %}'">Reset</button>
-
+    <button class="dashboard-button" onclick="location.href='{% url 'dashboard' %}'">Dashboard</button>
     <table>
         <thead>
             <tr>
@@ -82,6 +92,7 @@
                 <th>Total Seats</th>
                 <th>Ride Type</th>
                 <th>Rent</th>
+                <th>Ride Status</th>
                 <th>Bookings</th>
             </tr>
         </thead>
@@ -96,6 +107,7 @@
                 <td>{{ ride.ride.seats }}</td>
                 <td>{{ ride.ride.rideType }}</td>
                 <td>{{ ride.rent }}</td>
+                <td>{{ ride.get_requestAccept_display }}</td>
                 <td><a href = "{% url 'ride_request' id=ride.id %}" >view</a></td>
             </tr>
             {% endfor %}

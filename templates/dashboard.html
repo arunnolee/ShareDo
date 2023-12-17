@@ -10,7 +10,7 @@
         body {
             font-family: Arial, sans-serif;
             /* Background image URL */
-            background-image: url("{% static 'images/bg.jpg' %}"); /* Replace 'path_to_your_image.jpg' with the actual image URL or file path */
+            background-image: url("{% static 'images/bg.jpg' %}"); 
             background-size: cover;
             background-repeat: no-repeat;
             background-attachment: fixed;
@@ -119,11 +119,8 @@
     </div>
     <div class="top-right">
         <div class="middle">
-            <button class="verify-button">{{ request.user }}</button>
-            <form method="post" action="{% url 'logout' %}">
-                {% csrf_token %}
-                <button class="logout-button" type="submit">Logout</button>
-            </form>
+            <button class="profile-button" onclick="location.href='{% url 'userProfile' %}'">{{ request.user }}</button>
+            <a href="{% url 'logout' %}"><button class="logout-button">Logout</button></a>
         </div>
     </div>
     <div class="container"><br><br>
