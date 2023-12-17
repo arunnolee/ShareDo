@@ -17,6 +17,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from accounts import views
+from django.conf import settings
+from django.conf.urls.static import static
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('homepage/', views.home, name= 'homepage'),
@@ -28,14 +31,14 @@ urlpatterns = [
     path('dashboard/', views.dashboard, name= 'dashboard'),
     path('documentupload/', views.verification, name= 'verification'),
     path('driverform/', views.driver, name= 'driver'),
-    path('driverdocumentupload/', views.driverdoc, name= 'driverdoc'),
+    path('driverdocumentupload/', views.driver_doc_verification, name= 'driverdoc'),
     path('journeytable/', views.drivertable, name= 'journeytable'),
     path('clientform/<int:driver_id>/', views.client, name= 'client'),
     path('bookedtable/', views.ride_table, name= 'bookedtable'),
     path('ride-request/<int:id>/', views.ride_request, name= 'ride_request'),
 
-    path('driver_accept/', views.driver_accept, name= 'driver_accept'),
-    path('driver_reject/', views.driver_reject, name= 'driver_reject'),
-    path('accept_text/', views.accept_text, name= 'accept_text'),
-    path('decline_text/', views.decline_text, name= 'decline_text'),
-]
+    path('driver_accept/<int:id>/', views.accept_ride_rent, name= 'driver_accept'),
+    path('driver_reject/<int:ride_id>/', views.driver_reject, name= 'driver_reject'),
+    path('my-ride-detail/', views.my_ride_detail, name="my_ride_detail"),
+    path('userProfile/', views.user_profile, name= 'userProfile'),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

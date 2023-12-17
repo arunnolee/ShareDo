@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
-
 class UserModel(AbstractUser):
     username = models.CharField(max_length=20, unique=True)
     email = models.EmailField(unique=True)
@@ -19,11 +18,17 @@ class Verification(models.Model):
     is_verified = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.legal_name
-    
+        return self.user.username
 
+
+class DriverVerification(models.Model):
+    user = models.OneToOneField(UserModel, on_delete=models.CASCADE, related_name='driver_verification')
+    photo = models.ImageField(upload_to="driver_doc")
+    license = models.ImageField(upload_to="driver_doc")
+    is_verified = models.BooleanField(default=False)
 
 class RideModel(models.Model):
+    created_on = models.DateTimeField(auto_now_add=True)
     drivername = models.OneToOneField(UserModel, on_delete=models.CASCADE, related_name="driver_profile", null=True)
     location = models.CharField(max_length=20)
     destination = models.CharField(max_length=20)
@@ -31,7 +36,6 @@ class RideModel(models.Model):
     time = models.CharField(max_length=100)
     seats = models.IntegerField()
     rideType = models.CharField(max_length=20, blank=True, null=True)
-    accept = models.BooleanField(blank=True, null=True)
 
     def __str__(self):
         return f"{self.location} to {self.destination}"
@@ -40,12 +44,20 @@ class RideModel(models.Model):
     def available_seats(self):
         return self.seats - self.passenger
     
-
 class Rent(models.Model):
+    REQUEST_ACCEPT_CHOICES = (
+        ("A", "Accepted"),
+        ("R", "Rejected"),
+        ("P", "Pending")
+    )
+    created_on = models.DateTimeField(auto_now_add=True)
     user_client = models.ForeignKey('UserModel', on_delete=models.CASCADE, related_name="rent")
     ride = models.ForeignKey('RideModel', on_delete=models.CASCADE, related_name="ride")
     rent = models.CharField(max_length=5)
+    requestAccept = models.CharField(max_length=1, choices=REQUEST_ACCEPT_CHOICES, default="P")
 
+    def __str__(self):
+        return self.user_client.username
 
 class ContactUsModel(models.Model):
     name = models.CharField(max_length=50)
@@ -55,3 +67,4 @@ class ContactUsModel(models.Model):
 
     def __str__(self):
         return self.name
+    

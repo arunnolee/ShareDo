@@ -1,8 +1,8 @@
-from django.shortcuts import render, HttpResponse, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password
-from .models  import UserModel, Verification, RideModel, Rent
-from .form import DriverRideForm, VerificationForm, ClientRideForm, ContactUsForm
+from .models  import UserModel, Verification, RideModel, Rent, DriverVerification
+from .form import DriverRideForm, VerificationForm, ContactUsForm, DriverVerificationForm
 from django.contrib.auth.decorators  import login_required
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
@@ -16,6 +16,8 @@ def home(request):
 def dashboard(request):
     return render(request, 'dashboard.html')
 
+def user_profile(request):
+    return render(request, "profile.html")
 
 def logout_user(request):
     logout(request)
@@ -63,9 +65,11 @@ def contactus(request):
         form = ContactUsForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponse('Your message has been submitted:')
+            messages.success(request, 'Your message has been submitted:' )
+            return redirect('contactus')
         else:
-            return HttpResponse('ERROR:')
+            messages.success(request, 'ERROR: Message not sent.')
+            return redirect('contactus')
     else:
         form = ContactUsForm()
         context= {'form': form}
@@ -84,6 +88,19 @@ def verification(request):
                 return redirect( 'dashboard')
     return render(request, 'verification.html')
 
+def driver_doc_verification(request):
+    if request.method == "POST":
+        form = DriverVerificationForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save(commit=False)
+            DriverVerification.objects.create(user_id=request.user.id, **form.cleaned_data)
+            messages.success(request, 'Driver Verification Process has been submitted....')
+            return redirect( 'dashboard')
+        else:
+            messages.error(request, 'Driver Verification Process submission failed....')
+            return redirect( 'dashboard')
+    return render(request, "driverdoc.html")
+
 @login_required
 def driver(request):
     try:
@@ -92,16 +109,23 @@ def driver(request):
             return redirect('dashboard')
     except ObjectDoesNotExist:
         return redirect('verification')
+    
+    try:
+        if request.user.driver_verification.is_verified == False:
+            messages.success(request,"You are not verified as driver yet! Your driver verification is Still pending!!!")
+            return redirect('dashboard')
+    except ObjectDoesNotExist:
+        return redirect('driverdoc')
+
     if request.method == 'POST':
         form = DriverRideForm(request.POST)
         if form.is_valid():
             driver = form.save(commit=False)
             driver.drivername = request.user
             form.save()
-            messages.success(request, "Form has been submitted....")
+            messages.success(request, "You have submitted your journey form....")
             return redirect("driver")
         else:
-            print(form.errors)
             messages.error(request, 'Form submission failed....')
             return redirect('driver')
     else:
@@ -112,13 +136,17 @@ def driver(request):
 
 def client(request, driver_id):
     ride_object = RideModel.objects.get(id=driver_id)
-    r = Rent.objects.filter(ride=driver_id)
+    r = Rent.objects.filter(ride=driver_id, requestAccept="A")
     booked_seat = len(r)
     available_seats = ride_object.seats - booked_seat
 
     if request.method == "POST":
         rent = request.POST.get("rent")
-        if Rent.objects.filter(user_client=request.user, ride=driver_id).exists():
+        if Rent.objects.filter(
+            Q(requestAccept="A") | Q(requestAccept="P"),
+            user_client=request.user, 
+            ride=driver_id, 
+            ).exists():
             messages.success(request,"You have already booked the seat.")
             return redirect('client',driver_id=driver_id)
         else:
@@ -128,20 +156,9 @@ def client(request, driver_id):
     context = {'driver': ride_object, 'available_seats': available_seats}
     return render (request, 'client.html', context)
 
-def ride_request(request, id):
-    ride = Rent.objects.get(id=id)
-    context = {'ride': ride}
-    return render(request, 'client_table.html', context)
-
-
-def driverdoc(request):
-    return render(request, 'driverdoc.html')
-
 
 def drivertable(request):
-    """
-    list of destinattion.
-    """
+
     try:
         if request.user.verification.is_verified == False:
             messages.success(request,"You are not verified yet! Still pending!!!")
@@ -159,21 +176,39 @@ def drivertable(request):
     return render(request, 'driver_table.html', context)
 
 def ride_table(request):
-    driver = RideModel.objects.get(drivername=request.user)
-    driver_rides = Rent.objects.filter(ride=driver)
+    try:
+        driver = get_object_or_404(RideModel, drivername=request.user)
+    except:
+        driver = None
+ 
+    driver_rides = Rent.objects.filter(ride=driver).order_by("-created_on")
     context = {'driver_rides': driver_rides}
     return render(request, 'driver_rides.html', context)
 
+def ride_request(request, id):
+    ride = Rent.objects.get(id=id)
+    context = {'ride': ride}
+    return render(request, 'client_table.html', context)
 
 
-def driver_accept(request):
-    return render(request, 'driver_accept.html')
+def accept_ride_rent(request, id):
+    ride_accp = Rent.objects.get(id = id)
+    ride_accp.requestAccept = "A"
+    ride_accp.save()
+    context = {'ride_accp': ride_accp}
+    return render(request, 'driver_accept.html', context)
 
-def driver_reject(request):
+def driver_reject(request, ride_id):
+    ride_rej = get_object_or_404(Rent, id = ride_id)
+    ride_rej.requestAccept = "R"
+    ride_rej.save()
+    # return redirect("bookedtable")
     return render(request, 'driver_reject.html')
 
-def decline_text(request):
-    return render(request, 'decline_text.html')
 
-def accept_text(request):
-    return render(request, 'accept_text.html')
+
+def my_ride_detail(request):
+    instance = Rent.objects.filter(user_client=request.user).order_by("-created_on")
+
+    context = {'instance': instance}
+    return render(request, "my_ride_detail.html", context)

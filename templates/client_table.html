@@ -8,7 +8,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-image: url("{% static 'images/goggle.jpg' %}");
+            background-image: url("{% static 'images/road.jpg' %}");
             background-size: cover;
             background-repeat: no-repeat;
             margin: 0;
@@ -16,7 +16,7 @@
         }
 
         .container {
-            background-color: rgba(255, 255, 255, 0.8);
+            background-color: rgba(350, 350, 350, 2);
             border-radius: 10px;
             padding: 20px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -61,11 +61,14 @@
         <p>Time: {{ ride.ride.time }}</p>
         <p>Ride Type: {{ ride.ride.rideType }}</p>
         <p>Offered Rent: {{ ride.rent }}</p>
+        <p>Ride Status: {{ride.get_requestAccept_display }}</p>
         
+        {% if ride.requestAccept == "P" %}
         <div class="buttons">
-            <button id="acceptButton"> <a href = "{% url 'driver_accept' %}" >Accept</button>
-            <button id="declineButton"><a href = "{% url 'driver_reject' %}" >Decline</button>
+            <button id="acceptButton"> <a href = "{% url 'driver_accept' id=ride.id %}" >Accept</button>
+            <button id="declineButton"><a href = "{% url 'driver_reject' ride_id=ride.id %}" >Decline</button>
         </div>
+        {% endif %}
     </div>
 </body>
 </html>
